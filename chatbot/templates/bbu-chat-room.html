@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko" data-dark="false">
+    <head>
+        <meta charset="utf-8">
+        <title>Kakao Talk Chat Room</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="chrome">
+        <meta name="description" content="Kakao Talk Clone Chat Page">
+        <meta name="robotos" content="noindex, nofollow">
+        <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chat-room.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='CSS/general.css') }}">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
+        
+        <style>
+            button  {
+            background-color: skyblue;
+            border: none;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            hover {
+                background: tomato; 
+                color: white;
+            }
+
+        </style>
+
+    </head>
+    <body>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <div id="chat-body">
+            <!-- 설정바(최소화, 닫기 버튼 등) -->
+            <div class="setting_bar">
+                <i class="icon-window-minimize" alt="최소화버튼" title="최소화"></i>
+                <i class="icon-window-maximize" alt="최대화버튼" title="최대화"></i>
+                <i class="icon-cancel" alt="닫기버튼" title="닫기"></i>
+            </div>
+            <!-- 알림, 메뉴 기능 -->
+            <div class="main-menu">
+                <i class="icon-bell" title="알림"></i>
+                <i class="icon-ellipsis" title="메뉴"></i>
+            </div>
+            <!-- 프로필 사진, 프로필명 -->
+            <header>
+                <img class="profile-img" src="{{ url_for('static', filename='pic/default.png') }}" alt="레코북이미지">
+                <div class="profile-col">
+                    <span class="profile-name">레코북</span>
+                    <div class="sub-menu">
+                        <i class="icon-box" title="채팅방 서랍"></i>
+                        <i class="icon-search" title="검색"></i>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <!-- 고정된 공지사항 영역 -->
+                <div class="notice-bar">
+                    <i class="icon-bullhorn"></i>
+                    <span>재미있게 읽었던 책을 입력해주세요! 유사한 책을 추천해드립니다.</span>
+                    <i class="icon-down-open-big"></i>
+                </div>
+
+
+                <!-- 채팅 내용 시작 -->
+                <div class="chat-content">
+                    <!-- 메시지 시작 날짜 -->
+                    <div class="date-line">
+                        <time datetime="2021-03-29">2021년 5월 18일 화요일</time>
+                    </div>
+
+                    <!-- 채팅 내용 -->
+                    <div class="main-chat">
+
+                        <div class="friend-chat">
+                            <img class="profile-img" src="{{ url_for('static', filename='pic/default.png') }}" alt="쀼프로필사진">
+                            <div class="friend-chat-col">
+                                <span class="profile-name">레코북</span>
+                                <span class="balloon">안녕하세요 레코북입니다.</span>
+                                <span class="balloon">사용자님께서 재미있게 읽으신 책을 입력해주세요!</span>
+                            </div>
+
+                            <time datetime="07:30:00+09:00">오전 7:30</time>
+                        </div>
+
+
+                    <!-- 사용자 입력 내용 -->
+                        <div class="me-chat">
+                            <div class="me-chat-col">
+                                <span class="balloon">ex)나의라임오렌지나무</span>
+                            </div>
+
+
+                            <time datetime="07:32:00+09:00">오전 7:32</time>
+                            
+                        </div>
+                </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+
+                <!-- 채팅 입력창 -->
+                <div class="insert-content">
+                    <div class='usr'>
+                    <input id="txt" style="width:95%;height:150px"></input>
+                    <button onclick="say()">전송</button>
+                    </div>                
+                   
+                    <!-- 채팅 입력 관련 기능(파일 첨부, 캡쳐 등) -->
+                    <div class="insert-menu">
+                        <i class="icon-smile"></i>
+                        <i class="icon-attach"></i>
+                        <i class="icon-phone"></i>
+                        <i class="icon-calendar-empty"></i>
+                        <i class="icon-camera"></i>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+
+
+<!-- 자바 스크립트 -->
+    <script>
+    var url = "/chatbot";
+    function say() {
+      var txt = $('#txt').val();
+      $.get(url, {"m":"say","txt":txt},
+        function(res) {
+          alert('status:' + res)
+          var html1 = "<div class='me-chat'><div class='me-chat-col'><span class='balloon'>" + esc(txt) + "</span></div> <time datetime='07:32:00+09:00'>오전 7:32</time></div>";
+          
+          var html2 = "<div class='friend-chat'><img class='profile-img' src='{{ url_for('static', filename='pic/default.png') }}' alt='쀼프로필사진'><div class='friend-chat-col'><span class='profile-name'>레코북</span><span class='balloon'>" + esc(res) + "</span></div>" + 
+          "<time datetime='07:30:00+09:00>오전' 7:30</time></div>";
+          $('.main-chat').html($('.main-chat').html()+html1);
+          $('.main-chat').html($('.main-chat').html()+html2);
+
+
+          $('#txt').val('').focus();
+        });
+    
+    }
+    function esc(s) {
+        return s.replace('&', '&amp;').replace('<','&lt;')
+                .replace('>', '&gt;');
+    }
+    </script>
+
+    
+    </body>
+</html>

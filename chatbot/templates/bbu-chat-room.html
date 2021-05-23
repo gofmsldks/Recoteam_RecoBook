@@ -161,10 +161,12 @@
 <!-- 자바 스크립트 -->
     <script>
     var url = "/chatbot";
-    var sendTime = time();
     var start = getStartTime();
+    var sendTime = time();
 
     function say() {
+
+      var sendTime = time();
       var txt = $('#txt').val();
       $.get(url, {"m":"say","txt":txt},
         function(res) {
@@ -196,22 +198,15 @@
         var nowMt = now.getMinutes();
         var tempTime;
 
-        // if ~ else 조건문을 사용하여 오전,오후,밤,새벽 을 체크 합니다.
-        if ( nowHour <= 12  &&  nowHour  >= 24 ) {
-            if (nowHour == 24){
-                nowHour = nowHour - 12;
-            }
-            tempTime = '오전' + nowHour + ':' + nowMt;
-        } else if (  nowHour >= 12  &&  nowHour  < 24  ) {
-
-            if (nowHour == 12) {
-                tempTime = '오후' + nowHour + ':' + nowMt;
-
-            }
-            else{
-                tempTime = '오후' + (nowHour-12) + ':' + nowMt;
-            }
+        if (nowHour >12){
+            nowHour = nowHour -12;
+            if (nowMt < 10){tempTime = '오후' + nowHour + ':' + '0' + nowMt}
+            else{tempTime = '오후' + nowHour + ':' + nowMt}
         }
+        else{
+            if (nowMt < 10){tempTime = '오전' + nowHour + ':' + '0' + nowMt}
+            else{tempTime = '오전' + nowHour + ':' + nowMt}        }
+
 
         document.getElementById("initTime1").innerHTML = tempTime;
         document.getElementById("initTime2").innerHTML = tempTime;

@@ -72,7 +72,7 @@
                 <div class="chat-content">
                     <!-- 메시지 시작 날짜 -->
                     <div class="date-line">
-                        <time datetime="2021-03-29">2021년 5월 18일 화요일</time>
+                        <time id = startTime></time>
                     </div>
 
                     <!-- 채팅 내용 -->
@@ -84,20 +84,25 @@
                                 <span class="profile-name">레코북</span>
                                 <span class="balloon">안녕하세요 레코북입니다.</span>
                                 <span class="balloon">사용자님께서 재미있게 읽으신 책을 입력해주세요!</span>
+                                <span class="balloon">*제목으로 찾기: 책의 제목 입력 <br> *키워드로 찾기: #형태로 태그 입력 <br> *순위보기: 1-10형태로 입력(10단위)</span>
                             </div>
 
-                            <time datetime="07:30:00+09:00">오전 7:30</time>
+                            <time id = "initTime1"></time>
                         </div>
 
 
                     <!-- 사용자 입력 내용 -->
                         <div class="me-chat">
                             <div class="me-chat-col">
-                                <span class="balloon">ex)나의라임오렌지나무</span>
+                                <span class="balloon">
+                                    ex) 나의라임오렌지나무<br>
+                                    ex) #만화#국내도서<br>
+                                    ex) 1-10<br>
+                                </span>
                             </div>
 
 
-                            <time datetime="07:32:00+09:00">오전 7:32</time>
+                            <time id = "initTime2"></time>
                             
                         </div>
                 </div>
@@ -156,15 +161,19 @@
 <!-- 자바 스크립트 -->
     <script>
     var url = "/chatbot";
+    var sendTime = time();
+    var start = getStartTime();
+
     function say() {
       var txt = $('#txt').val();
       $.get(url, {"m":"say","txt":txt},
         function(res) {
           alert('status:' + res)
-          var html1 = "<div class='me-chat'><div class='me-chat-col'><span class='balloon'>" + esc(txt) + "</span></div> <time datetime='07:32:00+09:00'>오전 7:32</time></div>";
+          var html1 = "<div class='me-chat'><div class='me-chat-col'><span class='balloon'>" + esc(txt)
+           + "</span></div><time>" + sendTime + "</time></div>";
           
-          var html2 = "<div class='friend-chat'><img class='profile-img' src='{{ url_for('static', filename='pic/default.png') }}' alt='쀼프로필사진'><div class='friend-chat-col'><span class='profile-name'>레코북</span><span class='balloon'>" + esc(res) + "</span></div>" + 
-          "<time datetime='07:30:00+09:00>오전' 7:30</time></div>";
+          var html2 = "<div class='friend-chat'><img class='profile-img' src='{{ url_for('static', filename='pic/default.png') }}' alt='쀼프로필사진'><div class='friend-chat-col'><span class='profile-name'>레코북</span><span class='balloon'>"
+           + res + "</span></div><time>" + sendTime+ "</time></div>";
           $('.main-chat').html($('.main-chat').html()+html1);
           $('.main-chat').html($('.main-chat').html()+html2);
 
@@ -177,8 +186,62 @@
         return s.replace('&', '&amp;').replace('<','&lt;')
                 .replace('>', '&gt;');
     }
-    </script>
 
+    function time(){
+        // Date 객체 사용을 명시 합니다.
+        var now = new Date();
+ 
+        // Date 객체의 getHours(시간) , getMinutes(분) 속성을 저장 합니다.
+        var nowHour = now.getHours();
+        var nowMt = now.getMinutes();
+        var tempTime;
+
+        // if ~ else 조건문을 사용하여 오전,오후,밤,새벽 을 체크 합니다.
+        if ( nowHour <= 12  &&  nowHour  >= 24 ) {
+            if (nowHour == 24){
+                nowHour = nowHour - 12;
+            }
+            tempTime = '오전' + nowHour + ':' + nowMt;
+        } else if (  nowHour >= 12  &&  nowHour  < 24  ) {
+
+            if (nowHour == 12) {
+                tempTime = '오후' + nowHour + ':' + nowMt;
+
+            }
+            else{
+                tempTime = '오후' + (nowHour-12) + ':' + nowMt;
+            }
+        }
+
+        document.getElementById("initTime1").innerHTML = tempTime;
+        document.getElementById("initTime2").innerHTML = tempTime;
+
+        return tempTime;
+    }
+
+
+
+
+    // yyyy-MM-dd 포맷으로 반환
+    function getFormatDate(date){
+        var year = date.getFullYear();              //yyyy
+        var month = (1 + date.getMonth());          //M
+        month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+        var day = date.getDate();                   //d
+        day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+        return  year + '년 ' + month + '월 ' + day + '일 ';
+    }
+
+
+    function getStartTime(){
+
+        var date = getFormatDate(new Date());
+
+        document.getElementById("startTime").innerHTML = date;
+        return date;
+    }
+
+    </script>
     
     </body>
 </html>

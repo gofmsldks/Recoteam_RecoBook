@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from flask_ngrok import run_with_ngrok
-import recomodel
+from chatbot.recomodel import recomodel
 
 app = Flask(__name__)
 run_with_ngrok(app)
 
 def make_reply(txt):
 
-  rec = recomodel()
+  rec = chatbot.recomodel()
 
   if "#" in txt:
       rec_book = rec.find_keyword_book(rec.get_genre_sim(), txt, 10)
